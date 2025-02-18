@@ -1,0 +1,63 @@
+#!/bin/bash
+
+BIN_DIR="$HOME/.local/bin"
+QUIZ_EXEC="quiz"
+QUIZ_SYSTEM_EXEC="quiz-system"
+QUIZ_URL="https://example.com/path/to/quiz"
+QUIZ_SYSTEM_URL="https://example.com/path/to/quiz-system"
+
+# Ensure ~/.local/bin exists
+mkdir -p "$BIN_DIR"
+
+# Check if the script is already installed
+if [[ "$(realpath "$0")" != "$BIN_DIR/$QUIZ_SYSTEM_EXEC" ]]; then
+    echo "Installing quiz-system to $BIN_DIR..."
+    cp "$0" "$BIN_DIR/$QUIZ_SYSTEM_EXEC"
+    chmod +x "$BIN_DIR/$QUIZ_SYSTEM_EXEC"
+    echo "Installation complete! Run 'quiz-system' from anywhere."
+    exit 0
+fi
+
+case "$1" in
+  update)
+    echo "Updating quiz and quiz-system..."
+
+    # Remove old quiz if it exists
+    if [ -f "$BIN_DIR/$QUIZ_EXEC" ]; then
+        echo "Removing old quiz executable..."
+        rm "$BIN_DIR/$QUIZ_EXEC"
+    fi
+
+    # Download new quiz executable
+    echo "Downloading new quiz executable..."
+    curl -L -o "$BIN_DIR/$QUIZ_EXEC" "$QUIZ_URL"
+
+    # Remove old quiz-system if it exists
+    if [ -f "$BIN_DIR/$QUIZ_SYSTEM_EXEC" ]; then
+        echo "Removing old quiz-system executable..."
+        rm "$BIN_DIR/$QUIZ_SYSTEM_EXEC"
+    fi
+
+    # Download new quiz-system executable
+    echo "Downloading new quiz-system executable..."
+    curl -L -o "$BIN_DIR/$QUIZ_SYSTEM_EXEC" "$QUIZ_SYSTEM_URL"
+
+    # Make them executable
+    chmod +x "$BIN_DIR/$QUIZ_EXEC" "$BIN_DIR/$QUIZ_SYSTEM_EXEC"
+
+    echo "Update complete!"
+    ;;
+
+  uninstall)
+    echo "Uninstalling quiz and quiz-system..."
+
+    rm -f "$BIN_DIR/$QUIZ_EXEC" "$BIN_DIR/$QUIZ_SYSTEM_EXEC"
+
+    echo "Uninstall complete!"
+    ;;
+
+  *)
+    echo "quiz-system is installed. Use 'quiz-system update' to update or 'quiz-system uninstall' to remove."
+    ;;
+esac
+
