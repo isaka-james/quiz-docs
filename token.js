@@ -1,20 +1,22 @@
-const http = require('http');
+const https = require('https');
 
 const debug = false;
 
-// Function to perform an HTTP GET request
+// Function to perform an HTTPS GET request
 function fetchPage(url, callback) {
     const options = {
         hostname: url.hostname,
-        port: url.port || 80,
+        port: 443, // Use 443 for HTTPS
         path: url.path,
         method: 'GET',
+        protocol: 'https:',
+        rejectUnauthorized: false, // 🔥 Ignore SSL certificate errors
         headers: {
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
         },
     };
 
-    const req = http.request(options, (res) => {
+    const req = https.request(options, (res) => {
         let data = '';
 
         res.on('data', (chunk) => {
@@ -53,14 +55,12 @@ fetchPage({ hostname: 'quiz.ct.ws', path: '/' }, (err, html) => {
         const cHex = scriptContentMatch[5];
 
         if (debug) {
-            // Log the extracted code
             console.log('toNumbers Code:', toNumbersCode);
             console.log('toHex Code:', toHexCode);
             console.log('a:', aHex);
             console.log('b:', bHex);
             console.log('c:', cHex);
         }
-
 
         // Execute the toNumbers function and convert hex to numbers
         const toNumbers = new Function('d', toNumbersCode + '; return toNumbers(d);');
@@ -75,7 +75,6 @@ fetchPage({ hostname: 'quiz.ct.ws', path: '/' }, (err, html) => {
             console.log('c:', c);
         }
 
-
         // Fetch the aes.js file
         fetchPage({ hostname: 'quiz.ct.ws', path: '/aes.js' }, (err, aesJs) => {
             if (err) {
@@ -85,22 +84,20 @@ fetchPage({ hostname: 'quiz.ct.ws', path: '/' }, (err, html) => {
                 process.exit(1);
             }
 
-            // Log the aes.js code
-            // console.log('aes.js Code:', aesJs);
-
             // Evaluate the aes.js code to define slowAES
             eval(aesJs); // This will define slowAES in the current scope
 
             // Now, call slowAES.decrypt(c, 2, a, b)
             const decryptedValue = slowAES.decrypt(c, 2, a, b); // Now slowAES should be defined
-            // console.log(decryptedValue);
 
             // Define the toHex function within this scope
-            function toHex() { for (var d = [], d = 1 == arguments.length && arguments[0].constructor == Array ? arguments[0] : arguments, e = "", f = 0; f < d.length; f++)e += (16 > d[f] ? "0" : "") + d[f].toString(16); return e.toLowerCase() }
+            function toHex() {
+                for (var d = [], d = 1 == arguments.length && arguments[0].constructor == Array ? arguments[0] : arguments, e = "", f = 0; f < d.length; f++)
+                    e += (16 > d[f] ? "0" : "") + d[f].toString(16);
+                return e.toLowerCase();
+            }
 
-            // console.log('toHex Function:', toHex);
-
-            // Call toHex with the decrypted value
+            // Convert the decrypted value to hex
             const hexValue = toHex(decryptedValue);
 
             console.log(hexValue);
@@ -112,3 +109,5 @@ fetchPage({ hostname: 'quiz.ct.ws', path: '/' }, (err, html) => {
         process.exit(1);
     }
 });
+
+
