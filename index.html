@@ -6,6 +6,22 @@
     <title>Quiz CLI - Installation Guide</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .copy-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .copy-popup.show {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 text-gray-900">
     <header class="bg-blue-900 text-white text-center py-8">
@@ -80,12 +96,20 @@
     </footer>
 
     <!-- Copy Functionality -->
+    <div id="copy-popup" class="copy-popup">Copied to clipboard!</div>
     <script>
         function copyToClipboard(text, icon) {
             navigator.clipboard.writeText(text).then(() => {
                 icon.classList.add('text-green-500');
                 setTimeout(() => icon.classList.remove('text-green-500'), 2000);
+                showCopyPopup();
             });
+        }
+
+        function showCopyPopup() {
+            const popup = document.getElementById('copy-popup');
+            popup.classList.add('show');
+            setTimeout(() => popup.classList.remove('show'), 2000);
         }
     </script>
 </body>
