@@ -1,10 +1,60 @@
 #!/bin/bash
 
 BIN_DIR="$HOME/.local/bin"
+SHARE_DIR="$HOME/.local/share/quiz"
 QUIZ_EXEC="quiz"
 QUIZ_SYSTEM_EXEC="quiz-system"
-QUIZ_URL="https://example.com/path/to/quiz"
-QUIZ_SYSTEM_URL="https://example.com/path/to/quiz-system"
+QUIZ_URL="https://github.com/isaka-james/quiz/releases/download/v0.0.0/quiz"
+QUIZ_SYSTEM_URL="https://raw.githubusercontent.com/isaka-james/quiz-docs/refs/heads/main/quiz-system"
+TOKEN_URL="https://raw.githubusercontent.com/isaka-james/quiz-docs/refs/heads/main/token.js"
+
+
+# Function to install Node.js
+install_nodejs() {
+    echo "Node.js is not installed. Attempting to install..."
+
+    if ! command -v sudo &> /dev/null; then
+        echo "Error: sudo is required to install Node.js. Please install Node.js manually."
+        exit 1
+    fi
+
+    # Detect OS
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        OS=$ID
+    else
+        OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+    fi
+
+    case $OS in
+        debian|ubuntu|kali)
+            echo "Detected Debian/Ubuntu/Kali. Installing Node.js..."
+            sudo apt update
+            sudo apt install -y nodejs
+            ;;
+        *)
+            echo "Detected $OS. Please install Node.js manually or using your package manager."
+            echo "For example:"
+            echo "  - On CentOS/Fedora/RHEL: curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo -E bash -"
+            echo "    Then run: sudo yum install -y nodejs"
+            echo "  - On Arch: sudo pacman -Syu nodejs npm"
+            echo "  - On openSUSE: sudo zypper install nodejs18"
+            echo "After installing Node.js, rerun this script."
+            exit 1
+            ;;
+    esac
+
+    if ! command -v node &> /dev/null; then
+        echo "Node.js installation failed. Please install manually."
+        exit 1
+    fi
+    echo "Node.js installed successfully."
+}
+
+# Check for Node.js installation
+if ! command -v node &> /dev/null; then
+    install_nodejs
+fi
 
 # Ensure ~/.local/bin exists
 mkdir -p "$BIN_DIR"
@@ -12,8 +62,20 @@ mkdir -p "$BIN_DIR"
 # Check if the script is already installed
 if [[ "$(realpath "$0")" != "$BIN_DIR/$QUIZ_SYSTEM_EXEC" ]]; then
     echo "Installing quiz-system to $BIN_DIR..."
+    # Install quiz-system
     cp "$0" "$BIN_DIR/$QUIZ_SYSTEM_EXEC"
     chmod +x "$BIN_DIR/$QUIZ_SYSTEM_EXEC"
+    
+    # Download quiz executable
+    echo "Downloading quiz executable..."
+    curl -L -o "$BIN_DIR/$QUIZ_EXEC" "$QUIZ_URL"
+    chmod +x "$BIN_DIR/$QUIZ_EXEC"
+    
+    # Download token.js
+    echo "Downloading token.js..."
+    mkdir -p "$SHARE_DIR"
+    curl -L -o "$SHARE_DIR/token.js" "$TOKEN_URL"
+    
     echo "Installation complete! Run 'quiz-system' from anywhere."
     exit 0
 fi
@@ -21,7 +83,7 @@ fi
 case "$1" in
   update)
     echo "Updating quiz and quiz-system..."
-
+    
     # Remove old quiz if it exists
     if [ -f "$BIN_DIR/$QUIZ_EXEC" ]; then
         echo "Removing old quiz executable..."
@@ -51,13 +113,19 @@ case "$1" in
   uninstall)
     echo "Uninstalling quiz and quiz-system..."
 
+    # Remove executables
     rm -f "$BIN_DIR/$QUIZ_EXEC" "$BIN_DIR/$QUIZ_SYSTEM_EXEC"
+    
+    # Remove shared data
+    echo "Removing shared data directory..."
+    rm -rf "$SHARE_DIR"
 
     echo "Uninstall complete!"
     ;;
 
   *)
     echo "quiz-system is installed. Use 'quiz-system update' to update or 'quiz-system uninstall' to remove."
+	echo "Use 'quiz' to run the quiz cli application."
     ;;
 esac
-
+         
