@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz CLI - Installation Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <header class="bg-blue-900 text-white text-center py-8">
+        <h1 class="text-4xl font-bold">Quiz CLI</h1>
+        <p class="text-lg mt-2">Your interactive study companion.</p>
+    </header>
+
+    <div class="container mx-auto px-8 py-12 flex flex-col lg:flex-row gap-12">
+        <!-- Overview -->
+        <section class="bg-white shadow-lg rounded-lg p-8 lg:w-1/2">
+            <h2 class="text-3xl font-semibold mb-4">About Quiz CLI</h2>
+            <p class="text-lg leading-relaxed">
+                Quiz CLI is a <strong>command-line quiz system</strong> designed to help users enhance their knowledge through interactive quizzes. Users can select from a variety of courses and answer multiple-choice questions tailored to their chosen subject.
+                Points are awarded for correct answers and deducted for incorrect ones. If a user's points reach <strong>0</strong>, they must wait until the next day to continue, encouraging daily learning and retention.
+                Each question comes with a <strong>time limit</strong> that varies based on its difficulty level, adding an element of challenge and excitement.
+            </p>
+            <p class="text-lg leading-relaxed mt-4">
+                The system also tracks user progress, providing insights into areas of strength and those needing improvement. Additionally, users can review their past quizzes and see detailed explanations for each question, helping them understand the correct answers.
+            </p>
+            <p class="mt-4"><strong>Exit Anytime:</strong> Press <code class="bg-gray-300 px-2 py-1 rounded">q</code> to quit the quiz at any point.</p>
+        </section>
+
+        <!-- Installation -->
+        <section class="bg-white shadow-lg rounded-lg p-8 lg:w-1/2">
+            <h2 class="text-3xl font-semibold mb-4">Installation</h2>
+            <h3 class="text-xl font-semibold mt-4">Option 1: Clone Repository</h3>
+            <div class="relative bg-gray-200 p-4 rounded-lg flex justify-between items-center">
+                <code>git clone https://github.com/isaka-james/quiz-docs</code>
+                <i class="fas fa-copy text-blue-600 cursor-pointer" onclick="copyToClipboard('git clone https://github.com/isaka-james/quiz-docs', this)"></i>
+            </div>
+            <div class="relative bg-gray-200 p-4 rounded-lg mt-2 flex justify-between items-center">
+                <code>cd quiz-docs && chmod +x quiz-system && ./quiz-system</code>
+                <i class="fas fa-copy text-blue-600 cursor-pointer" onclick="copyToClipboard('cd quiz-docs && chmod +x quiz-system && ./quiz-system', this)"></i>
+            </div>
+
+            <h3 class="text-xl font-semibold mt-6">Option 2: Use Curl</h3>
+            <div class="relative bg-gray-200 p-4 rounded-lg flex justify-between items-center">
+                <code>curl -L -o quiz-system "https://raw.githubusercontent.com/isaka-james/quiz-docs/refs/heads/main/quiz-system"</code>
+                <i class="fas fa-copy text-blue-600 cursor-pointer" onclick="copyToClipboard('curl -L -o quiz-system "https://raw.githubusercontent.com/isaka-james/quiz-docs/refs/heads/main/quiz-system"', this)"></i>
+            </div>
+            <div class="relative bg-gray-200 p-4 rounded-lg mt-2 flex justify-between items-center">
+                <code>chmod +x quiz-system && ./quiz-system</code>
+                <i class="fas fa-copy text-blue-600 cursor-pointer" onclick="copyToClipboard('chmod +x quiz-system && ./quiz-system', this)"></i>
+            </div>
+        </section>
+    </div>
+
+    <!-- Commands Section -->
+    <div class="container mx-auto px-8 py-12">
+        <section class="bg-white shadow-lg rounded-lg p-8">
+            <h2 class="text-3xl font-semibold mb-4">Commands</h2>
+            <div class="relative bg-gray-200 p-4 rounded-lg flex justify-between items-center">
+                <code>quiz</code>
+                <i class="fas fa-copy text-blue-600 cursor-pointer" onclick="copyToClipboard('quiz', this)"></i>
+            </div>
+            <p class="text-gray-700 mt-2">Launch the Quiz CLI.</p>
+            <div class="relative bg-gray-200 p-4 rounded-lg mt-2 flex justify-between items-center">
+                <code>quiz-system update</code>
+                <i class="fas fa-copy text-blue-600 cursor-pointer" onclick="copyToClipboard('quiz-system update', this)"></i>
+            </div>
+            <p class="text-gray-700 mt-2">Update to the latest version.</p>
+            <div class="relative bg-gray-200 p-4 rounded-lg mt-2 flex justify-between items-center">
+                <code>quiz-system uninstall</code>
+                <i class="fas fa-copy text-blue-600 cursor-pointer" onclick="copyToClipboard('quiz-system uninstall', this)"></i>
+            </div>
+            <p class="text-gray-700 mt-2">Uninstall Quiz CLI.</p>
+        </section>
+    </div>
+
+    <footer class="bg-blue-900 text-white text-center py-6">
+        <p class="text-sm">&copy; 2025 Isaka James. All rights reserved.</p>
+    </footer>
+
+    <!-- Copy Functionality -->
+    <script>
+        function copyToClipboard(text, icon) {
+            navigator.clipboard.writeText(text).then(() => {
+                icon.classList.add('text-green-500');
+                setTimeout(() => icon.classList.remove('text-green-500'), 2000);
+            });
+        }
+    </script>
+</body>
+</html>
